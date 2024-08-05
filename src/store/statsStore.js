@@ -9,6 +9,9 @@ export const statsStore = computed(() => {
     let result = {};
     if (equipment.value.main_weapon) {
         result = mergeObjects([DEFAULT_CHARACTER_STATS, attributesStats.value, equipmentStats.value]);
+        result.attack_speed = Number(
+            (result.attack_speed / (((result.attack_speed_bonus || 0) + 0) / 100 + 1)).toFixed(3)
+        );
         if (result.bonus_range > 0) {
             result.attack_range = Number(
                 (result.attack_range + (result.attack_range * result.bonus_range) / 100).toFixed(2)
@@ -21,9 +24,10 @@ export const statsStore = computed(() => {
             result.off_hand_weapon_attack_chance +=
                 (result.off_hand_weapon_attack_chance * result.off_hand_weapon_attack_chance_bonus) / 100;
         }
-        result.attack_speed = Number(
-            (result.attack_speed / (((result.attack_speed_bonus || 0) + 0) / 100 + 1)).toFixed(3)
-        );
+
+        if (result.move_speed_bonus > 0) {
+            result.move_speed = Number((result.move_speed * (result.move_speed_bonus / 100 + 1)).toFixed(0));
+        }
         return result;
     } else {
         result = mergeObjects([
@@ -33,6 +37,9 @@ export const statsStore = computed(() => {
             equipmentStats.value
         ]);
         result.attack_speed = Number((result.attack_speed / ((result.attack_speed_bonus || 0) / 100 + 1)).toFixed(3));
+        if (result.move_speed_bonus > 0) {
+            result.move_speed = Number((result.move_speed * (result.move_speed_bonus / 100 + 1)).toFixed(0));
+        }
     }
     return result;
 });
