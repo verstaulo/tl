@@ -29,6 +29,7 @@ import CharacterEquipment from './components/CharacterEquipment/CharacterEquipme
 .controls {
     padding: 1rem;
     position: relative;
+    width: 430px;
 }
 
 .divider {
@@ -43,5 +44,24 @@ import CharacterEquipment from './components/CharacterEquipment/CharacterEquipme
     padding: 1rem;
     border-radius: 1rem;
     background-color: hsla(var(--neutral66), 0.3);
+}
+
+@media (max-width: 899px) {
+    .main {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0.5rem;
+    }
+
+    .controls {
+        width: unset;
+        padding: 0.5rem;
+    }
+
+    .stats {
+        width: 100%;
+        padding: 0.5rem;
+    }
 }
 </style>

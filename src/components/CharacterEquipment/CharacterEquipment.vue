@@ -1,6 +1,6 @@
 <script setup>
 import CharacterEquipmentItem from './CharacterEquipmentItem.vue';
-import { nextTick, ref } from 'vue';
+import { nextTick, ref, watchEffect } from 'vue';
 import ItemMenu from './ItemMenu.vue';
 
 const equipmentKeys = {
@@ -83,5 +83,29 @@ const toggleMenuOpenHandler = (itemStateKey) => {
     left: calc(100% + 1rem);
     top: 0;
     z-index: 99;
+}
+
+@media (max-width: 899px) {
+    .characterEquipment {
+        gap: 0.25rem;
+    }
+}
+
+@media (max-width: 500px) {
+    .menu {
+        position: fixed;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        top: 25%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 99;
+    }
+    .characterEquipment,
+    .armor,
+    .accessory {
+        gap: 0.25rem;
+    }
 }
 </style>

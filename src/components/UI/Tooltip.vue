@@ -15,21 +15,72 @@ const toggleOpenHandler = (flag) => {
 
 const style = computed(() => {
     if (contentNode.value) {
-        const { bottom } = contentNode.value.getBoundingClientRect();
-        const top = window.innerHeight - bottom > 0;
-        if (top) {
-            return {
-                top: '0px',
-                bottom: 'unset'
-            };
-        } else {
-            return {
-                bottom: '0px',
-                top: 'unset'
-            };
-        }
+        const rootNodeCoords = rootNode.value.getBoundingClientRect();
+        const { width, height, top, right, bottom, left } = contentNode.value.getBoundingClientRect();
+        const hasBottomFreeSpace = window.innerHeight - bottom > 0;
+        const hasRightFreeSpace = window.innerWidth - right > 0;
+        const hasTopFreeSpace = rootNodeCoords.top - height > 0;
+        const hasLeftFreeSpace = rootNodeCoords.left - width > 0;
+        const st = () => {
+            if (!hasRightFreeSpace && hasBottomFreeSpace && hasLeftFreeSpace) {
+                return {
+                    top: '100%',
+                    right: 'calc(100% + 1rem)',
+                    bottom: 'unset',
+                    left: 'unset'
+                };
+            } else if (hasRightFreeSpace && !hasBottomFreeSpace) {
+                return {
+                    bottom: '0px',
+                    left: 'calc(100% + 1rem)',
+                    top: 'unset',
+                    right: 'unset'
+                };
+            } else if (!hasRightFreeSpace && !hasBottomFreeSpace) {
+                return {
+                    bottom: '0px',
+                    right: 'calc(100% + 1rem)',
+                    top: 'unset',
+                    left: 'unset'
+                };
+            } else if (!hasRightFreeSpace && !hasLeftFreeSpace && hasBottomFreeSpace) {
+                return {
+                    position: 'fixed',
+                    top: `${rootNodeCoords.bottom}px`,
+                    bottom: 'unset',
+                    right: 'unset',
+                    left: '50%',
+                    transform: 'translateX(-50%)'
+                };
+            } else
+                return {
+                    position: 'fixed',
+                    top: `${rootNodeCoords.bottom}px`,
+                    bottom: 'unset',
+                    right: 'unset',
+                    left: '50%',
+                    transform: 'translateX(-50%)'
+                };
+        };
+        return st();
     }
 });
+
+// else if (!topOffset && rightOffset) {
+//   return {
+//     top: 'unset',
+//     bottom: '0px',
+//     left: 'calc(100% + 1rem)',
+//     right: 'unset'
+//   };
+// } else if (!topOffset && !rightOffset && !lef) {
+//   return {
+//     bottom: '0px',
+//     top: '0px',
+//     left: 'unset',
+//     right: 'calc(100% + 1rem)'
+//   };
+// }
 </script>
 
 <template>

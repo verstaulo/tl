@@ -69,7 +69,7 @@ import { faRotate } from '@fortawesome/free-solid-svg-icons/faRotate';
     user-select: none;
     border-radius: var(--base-border-radius);
     width: 100%;
-    min-width: 25rem;
+    min-width: 20rem;
 }
 
 .characterAttributes__title {

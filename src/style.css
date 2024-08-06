@@ -110,7 +110,7 @@ button {
 
 body,
 html {
-    min-width: 530px;
+    min-width: 375px;
     min-height: 100vh;
     background-color: var(--neutral7);
 }

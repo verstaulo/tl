@@ -24,8 +24,6 @@ defineEmits(['update:isOpen']);
 .modal {
     position: fixed;
     inset: 0;
-    width: 100vw;
-    height: 100vh;
     z-index: 99;
     display: flex;
     justify-content: center;

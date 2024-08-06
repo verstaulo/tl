@@ -54,7 +54,6 @@ const isItemsListOpen = ref(false);
                 @click.stop="
                     () => {
                         takeOffEquipment(equipmentItemStateKey);
-                        $emit('updateMenuIsOpen', equipmentItemStateKey);
                     }
                 ">
                 <FontAwesomeIcon :icon="faCircleXmark" class="fa fa-close" />
@@ -172,5 +171,10 @@ const isItemsListOpen = ref(false);
 
 .uncommon {
     background: var(--uncommon-Rgradient);
+}
+@media (max-width: 899px) {
+    .equipmentItem__controls {
+        padding: 0 0.25rem;
+    }
 }
 </style>

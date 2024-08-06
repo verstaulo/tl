@@ -27,7 +27,7 @@ import StatsGroup from './StatsGroup.vue';
 }
 
 .characterStats__Group {
-    min-width: 400px;
+    min-width: 300px;
     border-radius: var(--base-border-radius);
     background-color: var(--neutral6);
 }
@@ -40,5 +40,19 @@ import StatsGroup from './StatsGroup.vue';
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 1rem;
+}
+
+@media (max-width: 1330px) {
+    .characterStats {
+        grid-template-columns: 1fr;
+    }
+
+    .survivalGroup :deep(.characterStats__Group_stats) {
+        grid-template-columns: unset;
+    }
+
+    .survivalGroup {
+        grid-column: unset;
+    }
 }
 </style>

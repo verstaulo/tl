@@ -2,11 +2,12 @@
 import storeKeyToTitle from '../../utils/storeKeyToTitle.js';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons/faChevronRight';
-import { computed } from 'vue';
+import { computed, ref, watch, watchEffect } from 'vue';
 
 const props = defineProps({
     itemGroup: String,
     itemLevel: Number,
+    enchantedLevel: Number,
     itemStats: Object,
     enchantedStats: Object,
     itemType: String,
@@ -23,7 +24,18 @@ const priorityStats = [
     'magic_defense',
     'damage_reduction'
 ];
-let isEnchantedStatsNotEmpty = computed(() => Object.keys(props.enchantedStats).length > 0);
+const isEnchantedStatsNotEmpty = computed(() => Object.keys(props.enchantedStats).length > 0);
+const operationType = ref('');
+watch(
+    () => props.enchantedLevel,
+    (value, oldValue) => {
+        if (value > oldValue && value !== props.itemLevel) {
+            operationType.value = 'increase';
+        } else if (value < oldValue && value !== props.itemLevel) {
+            operationType.value = 'decrease';
+        } else operationType.value = 'equal';
+    }
+);
 </script>
 <template>
     <div class="stats">
@@ -42,7 +54,12 @@ let isEnchantedStatsNotEmpty = computed(() => Object.keys(props.enchantedStats).
                     <span>{{ itemStats.main_min_damage ?? 0 }} ~ {{ itemStats.main_max_damage ?? 0 }}</span>
                     <template v-if="mode === 'edit' && isEnchantedStatsNotEmpty">
                         <FontAwesomeIcon :icon="faChevronRight" :size="'xs'" :style="{ padding: '0 4px' }" />
-                        <span class="stats__item-enchanted">
+                        <span
+                            :class="{
+                                'stats__item-increased': operationType === 'increase',
+                                'stats__item-decreased': operationType === 'decrease',
+                                stats__item: operationType === 'equal'
+                            }">
                             {{ enchantedStats.main_min_damage ?? 0 }}
                             ~
                             {{ enchantedStats.main_max_damage ?? 0 }}
@@ -64,7 +81,12 @@ let isEnchantedStatsNotEmpty = computed(() => Object.keys(props.enchantedStats).
                     <span>{{ itemStats.off_hand_min_damage ?? 0 }} ~ {{ itemStats.off_hand_max_damage ?? 0 }}</span>
                     <template v-if="mode === 'edit' && isEnchantedStatsNotEmpty">
                         <FontAwesomeIcon :icon="faChevronRight" :size="'xs'" :style="{ padding: '0 4px' }" />
-                        <span class="stats__item-enchanted">
+                        <span
+                            :class="{
+                                'stats__item-increased': operationType === 'increase',
+                                'stats__item-decreased': operationType === 'decrease',
+                                stats__item: operationType === 'equal'
+                            }">
                             {{ enchantedStats.off_hand_min_damage ?? 0 }}
                             ~
                             {{ enchantedStats.off_hand_max_damage ?? 0 }}
@@ -88,7 +110,12 @@ let isEnchantedStatsNotEmpty = computed(() => Object.keys(props.enchantedStats).
                         <span>{{ value }}</span>
                         <template v-if="mode === 'edit' && isEnchantedStatsNotEmpty">
                             <FontAwesomeIcon :icon="faChevronRight" :size="'xs'" :style="{ padding: '0 4px' }" />
-                            <span class="stats__item-enchanted">
+                            <span
+                                :class="{
+                                    'stats__item-increased': operationType === 'increase',
+                                    'stats__item-decreased': operationType === 'decrease',
+                                    stats__item: operationType === 'equal'
+                                }">
                                 {{ enchantedStats[key] ?? 0 }}
                             </span>
                         </template>
@@ -113,7 +140,12 @@ let isEnchantedStatsNotEmpty = computed(() => Object.keys(props.enchantedStats).
                         <span>{{ value }}</span>
                         <template v-if="mode === 'edit' && isEnchantedStatsNotEmpty">
                             <FontAwesomeIcon :icon="faChevronRight" :size="'xs'" :style="{ padding: '0 4px' }" />
-                            <span class="stats__item-enchanted">
+                            <span
+                                :class="{
+                                    'stats__item-increased': operationType === 'increase',
+                                    'stats__item-decreased': operationType === 'decrease',
+                                    stats__item: operationType === 'equal'
+                                }">
                                 {{ enchantedStats[key] ?? 0 }}
                             </span>
                         </template>
@@ -146,8 +178,16 @@ let isEnchantedStatsNotEmpty = computed(() => Object.keys(props.enchantedStats).
     align-items: center;
 }
 
-.stats__item-enchanted {
+.stats__item {
+    color: inherit;
+}
+
+.stats__item-increased {
     color: var(--secondary);
+}
+
+.stats__item-decreased {
+    color: red;
 }
 
 .stats__item_edit {

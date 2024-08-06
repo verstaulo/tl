@@ -19,28 +19,21 @@ const { equipmentItemStateKey, mode, item } = defineProps({
 });
 const emit = defineEmits(['closeMenu']);
 const menuRef = ref();
-const currentItem = item ? item : equipment.value[equipmentItemStateKey];
+const currentItem = computed(() => {
+    return item ? item : equipment.value[equipmentItemStateKey];
+});
 
 const _clickHandler = (event) => {
     if (menuRef.value && !menuRef.value.contains(event.target)) {
         emit('closeMenu');
     }
 };
-onMounted(() => {
-    if (mode === 'edit') {
-        document.body.addEventListener('click', _clickHandler);
-    }
-});
-onUnmounted(() => {
-    if (mode === 'edit') {
-        document.body.removeEventListener('click', _clickHandler);
-    }
-});
+
 const titleStyles = computed(() => ({
-    color: `var(--${currentItem.tier})`
+    color: `var(--${currentItem.value.tier})`
 }));
 
-const enchantedLevel = ref(currentItem.level);
+const enchantedLevel = ref(currentItem.value.level);
 const enchantedStats = ref([]);
 const selectedTraits = ref([]);
 
@@ -49,9 +42,9 @@ const increaseStatsHandler = () => {
     enchantedLevel.value++;
     const result = {};
     if (enchantedStats.value.length === 0) {
-        Object.entries(currentItem.stats).forEach(([statKey, statValue]) => {
-            const bonusValue = ENCHANT_PATTERNS[currentItem.type][statKey]
-                ? ENCHANT_PATTERNS[currentItem.type][statKey][enchantedLevel.value - 1]
+        Object.entries(currentItem.value.stats).forEach(([statKey, statValue]) => {
+            const bonusValue = ENCHANT_PATTERNS[currentItem.value.type][statKey]
+                ? ENCHANT_PATTERNS[currentItem.value.type][statKey][enchantedLevel.value - 1]
                 : 0;
             if (statKey === 'attack_speed') {
                 result[statKey] = statValue;
@@ -61,8 +54,8 @@ const increaseStatsHandler = () => {
         });
     } else {
         enchantedStats.value.forEach(([statKey, statValue]) => {
-            const bonusValue = ENCHANT_PATTERNS[currentItem.type][statKey]
-                ? ENCHANT_PATTERNS[currentItem.type][statKey][enchantedLevel.value - 1]
+            const bonusValue = ENCHANT_PATTERNS[currentItem.value.type][statKey]
+                ? ENCHANT_PATTERNS[currentItem.value.type][statKey][enchantedLevel.value - 1]
                 : 0;
             if (statKey === 'attack_speed') {
                 result[statKey] = statValue;
@@ -76,10 +69,10 @@ const increaseStatsHandler = () => {
 const decreaseStatsHandler = () => {
     if (enchantedLevel.value === 0) return;
     const result = {};
-    if (enchantedStats.value.length === 0 && currentItem.level > 0) {
-        Object.entries(currentItem.stats).forEach(([statKey, statValue]) => {
-            const bonusValue = ENCHANT_PATTERNS[currentItem.type][statKey]
-                ? ENCHANT_PATTERNS[currentItem.type][statKey][enchantedLevel.value - 1]
+    if (enchantedStats.value.length === 0 && currentItem.value.level > 0) {
+        Object.entries(currentItem.value.stats).forEach(([statKey, statValue]) => {
+            const bonusValue = ENCHANT_PATTERNS[currentItem.value.type][statKey]
+                ? ENCHANT_PATTERNS[currentItem.value.type][statKey][enchantedLevel.value - 1]
                 : 0;
             if (statKey === 'attack_speed') {
                 result[statKey] = statValue;
@@ -89,8 +82,8 @@ const decreaseStatsHandler = () => {
         });
     } else {
         enchantedStats.value.forEach(([statKey, statValue]) => {
-            const bonusValue = ENCHANT_PATTERNS[currentItem.type][statKey]
-                ? ENCHANT_PATTERNS[currentItem.type][statKey][enchantedLevel.value - 1]
+            const bonusValue = ENCHANT_PATTERNS[currentItem.value.type][statKey]
+                ? ENCHANT_PATTERNS[currentItem.value.type][statKey][enchantedLevel.value - 1]
                 : 0;
             if (statKey === 'attack_speed') {
                 result[statKey] = statValue;
@@ -112,8 +105,18 @@ const submitEnchantedStatsHandler = () => {
         selectedTraits.value = [];
     }
     enchantedStats.value = [];
-    enchantedLevel.value = currentItem.level;
+    enchantedLevel.value = currentItem.value.level;
 };
+onMounted(() => {
+    if (mode === 'edit') {
+        document.body.addEventListener('click', _clickHandler);
+    }
+});
+onUnmounted(() => {
+    if (mode === 'edit') {
+        document.body.removeEventListener('click', _clickHandler);
+    }
+});
 </script>
 <template>
     <div class="itemMenu" ref="menuRef" @click.stop>
@@ -159,6 +162,7 @@ const submitEnchantedStatsHandler = () => {
             :enchanted-stats="Object.fromEntries(enchantedStats)"
             :item-group="currentItem.itemGroup"
             :item-level="currentItem.level"
+            :enchanted-level="enchantedLevel"
             :item-stats="currentItem.stats"
             :item-type="currentItem.type"
             :mode="mode" />
