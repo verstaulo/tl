@@ -77,7 +77,7 @@ const isItemsListOpen = ref(false);
         </div>
     </div>
     <Modal v-model:is-open="isItemsListOpen">
-        <EquipmentList :equipmentStateKey="equipmentItemStateKey" />
+        <EquipmentList :equipmentStateKey="equipmentItemStateKey" @selected="isItemsListOpen = false" />
     </Modal>
 </template>
 

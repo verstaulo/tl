@@ -11,6 +11,7 @@ import ItemMenu from './ItemMenu.vue';
 const { equipmentStateKey } = defineProps({
     equipmentStateKey: String
 });
+const emit = defineEmits(['selected']);
 const stateKeyMap = {
     main_weapon: 'weapon',
     secondary_weapon: 'weapon',
@@ -46,6 +47,11 @@ const filteredItems = computed(() => {
                 item.itemGroup === 'accessory')
     );
 });
+
+const selectHandler = (item, equipmentStateKey) => {
+    putOnEquipment(item, equipmentStateKey);
+    emit('selected');
+};
 </script>
 <template>
     <div class="itemsList">
@@ -61,7 +67,7 @@ const filteredItems = computed(() => {
                 :filters-list="weaponFilters" />
         </div>
 
-        <ul class="itemsList__cards" @click.self.stop>
+        <ul class="itemsList__cards">
             <li v-for="item in filteredItems">
                 <button
                     :class="{
@@ -73,7 +79,7 @@ const filteredItems = computed(() => {
                         legendary: activeTierFilter === 'legendary'
                     }"
                     class="itemsList__cardItem"
-                    @click="putOnEquipment(item, equipmentStateKey)">
+                    @click="selectHandler(item, equipmentStateKey)">
                     <img :alt="item.title" :src="item.image" class="cardItem__image" />
                     <span>{{ item.title }}</span>
                     <Tooltip :style="{ marginLeft: 'auto' }">

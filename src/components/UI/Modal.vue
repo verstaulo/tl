@@ -12,7 +12,7 @@ defineEmits(['update:isOpen']);
     <Teleport to="body">
         <Transition name="fade">
             <div v-if="isOpen" class="modal" @click="$emit('update:isOpen', false)">
-                <div class="modal__content">
+                <div class="modal__content" @click.stop>
                     <slot></slot>
                 </div>
             </div>
