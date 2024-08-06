@@ -1,5 +1,5 @@
 <script setup>
-import { computed, reactive, ref, watch, watchEffect } from 'vue';
+import { computed, ref } from 'vue';
 import storeKeyToTitle from '../../utils/storeKeyToTitle.js';
 import ItemMenuTraitSelect from './ItemMenuTraitSelect.vue';
 
@@ -11,15 +11,30 @@ const props = defineProps({
 defineEmits(['traitSelected']);
 const currentSelectedTraits = ref([]);
 
+const traitsToSubmit = computed(() => {
+    const result = props.itemSelectedTraits ? [...props.itemSelectedTraits] : [];
+
+    if (currentSelectedTraits.value[0]) {
+        result[0] = currentSelectedTraits.value[0];
+    }
+    if (currentSelectedTraits.value[1]) {
+        result[1] = currentSelectedTraits.value[1];
+    }
+    if (currentSelectedTraits.value[2]) {
+        result[2] = currentSelectedTraits.value[2];
+    }
+    return result;
+});
+
 const currentAvailableTraits = computed(() => {
     if (currentSelectedTraits.value.length === 0 && !props.itemSelectedTraits) {
         return props.itemAvailableTraits;
     } else {
-        const currentSelectedTraitsKeys =
-            currentSelectedTraits.value.length === 0
+        const selectedTraitsKeys =
+            traitsToSubmit.value.length === 0
                 ? props.itemSelectedTraits.map(([keyName]) => keyName)
-                : currentSelectedTraits.value.map(([keyName]) => keyName);
-        return props.itemAvailableTraits.filter(([key]) => !currentSelectedTraitsKeys.includes(key));
+                : traitsToSubmit.value.map(([keyName]) => keyName);
+        return props.itemAvailableTraits.filter(([key]) => !selectedTraitsKeys.includes(key));
     }
 });
 </script>
@@ -64,7 +79,7 @@ const currentAvailableTraits = computed(() => {
                 @traitSelected="
                     (args) => {
                         currentSelectedTraits[0] = args;
-                        $emit('traitSelected', currentSelectedTraits);
+                        $emit('traitSelected', traitsToSubmit);
                     }
                 " />
             <ItemMenuTraitSelect
@@ -79,7 +94,7 @@ const currentAvailableTraits = computed(() => {
                 @traitSelected="
                     (args) => {
                         currentSelectedTraits[1] = args;
-                        $emit('traitSelected', currentSelectedTraits);
+                        $emit('traitSelected', traitsToSubmit);
                     }
                 " />
             <ItemMenuTraitSelect
@@ -94,7 +109,7 @@ const currentAvailableTraits = computed(() => {
                 @traitSelected="
                     (args) => {
                         currentSelectedTraits[2] = args;
-                        $emit('traitSelected', currentSelectedTraits);
+                        $emit('traitSelected', traitsToSubmit);
                     }
                 " />
         </template>
@@ -105,9 +120,11 @@ const currentAvailableTraits = computed(() => {
     border-radius: 0.2rem;
     background-color: hsla(var(--neutral77), 0.5);
 }
+
 .traits {
     padding: 0.5rem;
 }
+
 .hasTraits {
     color: var(--secondary-muted);
 }
