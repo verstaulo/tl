@@ -53,7 +53,7 @@ export const putOnEquipment = (item, equipmentStateKey) => {
 };
 
 export const takeOffEquipment = (equipmentStateKey) => {
-    if (equipment.value[equipmentStateKey].setInfo.setName) {
+    if (equipment.value[equipmentStateKey].setInfo?.setName) {
         equipmentSetCounter.value[equipment.value[equipmentStateKey].setInfo.setName] -= 1;
     }
     equipment.value[equipmentStateKey] = null;
