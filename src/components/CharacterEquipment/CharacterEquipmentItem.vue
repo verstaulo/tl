@@ -40,7 +40,8 @@ const isItemsListOpen = ref(false);
                         ? equipment[equipmentItemStateKey].image
                         : DEFAULT_ITEMS_DATA[equipmentItemStateKey].image
                 "
-                alt=""
+                :alt="equipmentItemStateKey"
+                draggable="false"
                 class="equipmentItem__image" />
             <span v-if="equipment[equipmentItemStateKey]?.level > 0" class="equipmentItem__level">
                 {{ equipment[equipmentItemStateKey]?.level }}

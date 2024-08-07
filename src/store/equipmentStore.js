@@ -1,5 +1,4 @@
 import { computed, ref } from 'vue';
-import { enchantEquipmentStats } from '../utils/enchantStats';
 import SET_BONUSES from '../constants/SET_BONUSES';
 import filteredSecondaryStats from '../utils/filterSecondaryWeaponStats';
 import mergeObjects from '../utils/mergeObjects';
@@ -40,7 +39,6 @@ const equipmentSetStats = computed(() => {
             result[bonusKey] = (result[bonusKey] || 0) + SET_BONUSES[key][4][bonusKey];
         }
     });
-    console.log(result);
     return result;
 });
 
@@ -52,14 +50,12 @@ export const putOnEquipment = (item, equipmentStateKey) => {
     if (item.setInfo?.setName) {
         equipmentSetCounter.value[item.setInfo.setName] += 1;
     }
-    console.log('COUNTER', equipmentSetCounter.value);
 };
 
 export const takeOffEquipment = (equipmentStateKey) => {
     if (equipment.value[equipmentStateKey].setInfo.setName) {
         equipmentSetCounter.value[equipment.value[equipmentStateKey].setInfo.setName] -= 1;
     }
-    console.log('COUNTER', equipmentSetCounter.value);
     equipment.value[equipmentStateKey] = null;
 };
 
@@ -84,29 +80,3 @@ export const equipmentStats = computed(() =>
         equipmentSetStats.value
     ])
 );
-
-// export const enchantEquipment = (equipmentStateKey) => {
-//     if (equipment[equipmentStateKey].level === 9) return;
-//     equipment.value[equipmentStateKey].stats = mergeObjects([
-//         enchantEquipmentStats(
-//             equipment.value[equipmentStateKey].stats,
-//             equipment.value[equipmentStateKey].type,
-//             equipment.value[equipmentStateKey].level
-//         ),
-//         equipment.value[equipmentStateKey].stats
-//     ]);
-//     equipment.value[equipmentStateKey].level += 1;
-// };
-
-// export const equipmentItemSelector = (stateKey) => computed(() => equipment.value[stateKey]);
-
-// export const mainWeaponSelector = derived(
-//   equipment,
-//   ($equipment) => $equipment.main_weapon?.type
-// );
-
-// export const equipmentStatSelector = (/** @type {string} */ statName) =>
-//   derived(
-//     allEquipmentStats,
-//     ($allEquipmentStats) => $allEquipmentStats[statName] || 0
-//   );

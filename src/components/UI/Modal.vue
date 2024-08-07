@@ -1,11 +1,20 @@
 <script setup>
-defineProps({
+import { watch } from 'vue';
+
+const props = defineProps({
     isOpen: {
         type: Boolean,
         required: true
     }
 });
 defineEmits(['update:isOpen']);
+
+watch(
+    () => props.isOpen,
+    (newValue) => {
+        newValue ? (document.body.style.overflowY = 'hidden') : (document.body.style.overflowY = 'auto');
+    }
+);
 </script>
 
 <template>

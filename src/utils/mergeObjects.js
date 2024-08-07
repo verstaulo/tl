@@ -16,7 +16,7 @@ const mergeObjects = (objects) => {
                     acc.melee_heavy_attack_chance = (acc.melee_heavy_attack_chance || 0) + value;
                     acc.ranged_heavy_attack_chance = (acc.ranged_heavy_attack_chance || 0) + value;
                     acc.magic_heavy_attack_chance = (acc.magic_heavy_attack_chance || 0) + value;
-                } else acc[key] = Number(((acc[key] || 0) + (value || 0)).toFixed(2));
+                } else acc[key] = Number(((acc[key] || 0) + (value || 0)).toFixed(3));
             });
             return acc;
         } else return acc;
