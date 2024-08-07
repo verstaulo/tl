@@ -40,20 +40,26 @@ const equipmentSetStats = computed(() => {
             result[bonusKey] = (result[bonusKey] || 0) + SET_BONUSES[key][4][bonusKey];
         }
     });
+    console.log(result);
     return result;
 });
 
 export const putOnEquipment = (item, equipmentStateKey) => {
+    if (equipment.value[equipmentStateKey]) {
+        takeOffEquipment(equipmentStateKey);
+    }
     equipment.value[equipmentStateKey] = item;
-    if (item.setInfo) {
+    if (item.setInfo?.setName) {
         equipmentSetCounter.value[item.setInfo.setName] += 1;
     }
+    console.log('COUNTER', equipmentSetCounter.value);
 };
 
 export const takeOffEquipment = (equipmentStateKey) => {
-    if (equipment.value[equipmentStateKey].setInfo) {
+    if (equipment.value[equipmentStateKey].setInfo.setName) {
         equipmentSetCounter.value[equipment.value[equipmentStateKey].setInfo.setName] -= 1;
     }
+    console.log('COUNTER', equipmentSetCounter.value);
     equipment.value[equipmentStateKey] = null;
 };
 
